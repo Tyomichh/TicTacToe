@@ -78,8 +78,8 @@ fun printField(field: List<CellState>, dim: Int) {
 }
 
 fun main() {
-    println("Консольна гра Хрестики-Нулики")
-    println("Виберіть розмір поля (3–5): ")
+    println("Console gane TicTacToe")
+    println("Choose yore field(3-5): ")
     val dim = readln().toInt().coerceIn(3, 5)
 
     var crossScore = 0
@@ -93,7 +93,7 @@ fun main() {
 
         while (true) {
             printField(field, dim)
-            println("Гравець ${if (currentPlayer == Player.CROSS) "X" else "0"}, введіть хід (рядок і стовпчик):")
+            println("Player ${if (currentPlayer == Player.CROSS) "X" else "0"}, enter a course (row and column):")
 
             var input: String? = null
             var validInput = true
@@ -105,27 +105,27 @@ fun main() {
             inputThread.join(turnTimeMillis)
 
             if (input == null) {
-                println("Час вийшов! Хід передано супернику.")
+                println("Time's up! The move is passed to the opponent.")
                 skipTurn = true
                 validInput = false
             } else {
                 try {
                     val splitInput = input!!.trim().split(" ")
-                    if (splitInput.size != 2) throw Exception("Невірний формат вводу")
+                    if (splitInput.size != 2) throw Exception("Invalid input format")
 
                     val row = splitInput[0].toInt()
                     val col = splitInput[1].toInt()
                     val index = row * dim + col
 
                     if (index !in field.indices || field[index] != CellState.EMPTY) {
-                        println("Недопустимий хід. Спробуйте ще раз.")
+                        println("Invalid move. Try again.")
                         validInput = false
                     } else {
                         field[index] = currentPlayer.mark
                         skipTurn = false
                     }
                 } catch (e: Exception) {
-                    println("Помилка вводу. Спробуйте ще раз.")
+                    println("Input error. Please try again.")
                     validInput = false
                 }
             }
@@ -135,19 +135,19 @@ fun main() {
                 when (state) {
                     GameState.CROSS_WIN -> {
                         printField(field, dim)
-                        println("Гравець X переміг!")
+                        println("Player X has won!")
                         crossScore++
                         break
                     }
                     GameState.NOUGHT_WIN -> {
                         printField(field, dim)
-                        println("Гравець 0 переміг!")
+                        println("Player O has won!")
                         noughtScore++
                         break
                     }
                     GameState.DRAW -> {
                         printField(field, dim)
-                        println("Нічия!")
+                        println("A draw!")
                         break
                     }
                     GameState.IN_PROGRESS -> {}
@@ -157,8 +157,8 @@ fun main() {
             currentPlayer = if (currentPlayer == Player.CROSS) Player.NOUGHT else Player.CROSS
         }
 
-        println("Рахунок: X = $crossScore, 0 = $noughtScore")
-        println("Натисніть [Enter], щоб розпочати новий раунд або 'exit' для виходу")
+        println("Account: X = $crossScore, 0 = $noughtScore")
+        println("Press [Enter] to start a new round or 'exit' to quit")
         val cmd = readlnOrNull()?.lowercase()?.trim()
         if (cmd == "exit") exitProcess(0)
     }
